@@ -137,15 +137,16 @@
             // FileTest
             // 
             this.FileTest.Name = "FileTest";
-            this.FileTest.Size = new System.Drawing.Size(216, 26);
+            this.FileTest.Size = new System.Drawing.Size(189, 26);
             this.FileTest.Text = "文件读取测试";
             this.FileTest.Click += new System.EventHandler(this.FileTest_Click);
             // 
             // 选项卡生成测试ToolStripMenuItem
             // 
             this.选项卡生成测试ToolStripMenuItem.Name = "选项卡生成测试ToolStripMenuItem";
-            this.选项卡生成测试ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.选项卡生成测试ToolStripMenuItem.Size = new System.Drawing.Size(189, 26);
             this.选项卡生成测试ToolStripMenuItem.Text = "选项卡生成测试";
+            this.选项卡生成测试ToolStripMenuItem.Click += new System.EventHandler(this.选项卡生成测试ToolStripMenuItem_Click);
             // 
             // Form1
             // 

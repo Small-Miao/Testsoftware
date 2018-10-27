@@ -121,8 +121,9 @@
             // Prtsc
             // 
             this.Prtsc.Name = "Prtsc";
-            this.Prtsc.Size = new System.Drawing.Size(144, 26);
+            this.Prtsc.Size = new System.Drawing.Size(216, 26);
             this.Prtsc.Text = "快速截图";
+            this.Prtsc.Click += new System.EventHandler(this.Prtsc_Click);
             // 
             // deBugToolStripMenuItem
             // 

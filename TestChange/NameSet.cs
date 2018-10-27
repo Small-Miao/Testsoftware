@@ -39,7 +39,7 @@ namespace TestChange
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(textBox1.Text == null)
+            if(textBox1.Text == null||string.IsNullOrEmpty(textBox1.Text.Trim())==true)
             {
                 MessageBox.Show("请输入信息","错误");
                 textBox1.Text = null;

@@ -352,14 +352,14 @@ namespace TestChange
                     }
                     else
                     {
-                        rua += tabControl1.TabPages[j].Controls[i].Text;
+                        rua += j + 1 + "."+tabControl1.TabPages[j].Controls[i].Text+"\n";
                     }
 
                 }
                 }
 
             }
-            rua += "姓名:" + nameSet.Name + "学号:" + nameSet.NameNumber;
+            rua += "姓名:" + nameSet.Name + "\n学号:" + nameSet.NameNumber+"\n";
             if (!File.Exists(nameSet.Name + nameSet.NameNumber))
             {
                 FileStream fs1 = new FileStream(nameSet.Name + nameSet.NameNumber, FileMode.Create, FileAccess.Write);//创建写入文件 
@@ -375,6 +375,12 @@ namespace TestChange
                 sr.WriteLine(rua);//开始写入值
                 sr.Close();
                 fs.Close();
+            }
+            MessageBox.Show("考试已经结束,文件已经导出在软件目录","提示");
+            while (tabControl1.TabPages.Count > 0)
+            {
+                TabPage tabPage = tabControl1.TabPages[0];//重复删除第一个就行了
+                this.tabControl1.TabPages.Remove(tabPage);
             }
             StartTest.Enabled = true;
             EndTest.Enabled = false;

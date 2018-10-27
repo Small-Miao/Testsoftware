@@ -12,7 +12,7 @@ namespace TestChange
 {
     public partial class Form1 : Form
     {
-            
+
         NameSet nameSet = new NameSet();
         Scr scr = new Scr();
         string TestGet;
@@ -22,9 +22,10 @@ namespace TestChange
         {
             InitializeComponent();
             tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
-        #if DEBUG
+#if DEBUG
             deBugToolStripMenuItem.Visible = true;
-        #endif
+#endif
+            EndTest.Enabled = false;
         }
 
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -34,7 +35,7 @@ namespace TestChange
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            MessageBox.Show("一定要点击选项卡的结束考试，否则答案不会保存","提示");
+            MessageBox.Show("一定要点击选项卡的结束考试，否则答案不会保存", "提示");
         }
 
         private void StartTest_Click(object sender, EventArgs e)
@@ -55,7 +56,7 @@ namespace TestChange
                     TestGet1 += linee;
                 }
                 StreamReader srrr = new StreamReader("test3.test", Encoding.UTF8);
-                String lineee;
+                string lineee;
                 while ((lineee = srrr.ReadLine()) != null)
                 {
                     TestGet2 += lineee;
@@ -130,38 +131,58 @@ namespace TestChange
                             Location = new System.Drawing.Point(27, 241),
                             Name = "textBox1",
                             Size = new System.Drawing.Size(410, 25),
-
-
                         };
                         tabControl1.TabPages[a - 1].Controls.Add(textb);
                         tabControl1.TabPages[a - 1].Controls.Add(labt);
                         a++;
                     }
-                    var s6p = TestGet2.Split('@');
-                    foreach (var s7p in s6p)
+                }
+                var s6p = TestGet2.Split('@');
+                foreach (var s7p in s6p)
+                {
+                    if (s7p != "")
                     {
-                        if (s5p != "")
+                        TabPage First = new TabPage();
+                        First.Name = "test" + a;
+                        First.Text = "第" + a + "题";
+                        tabControl1.TabPages.Add(First);
+                        Label labt = new Label()
                         {
-                            TabPage First = new TabPage();
-                            First.Name = "test" + a;
-                            First.Text = "第" + a + "题";
-                            tabControl1.TabPages.Add(First);
-                            Label labt = new Label()
-                            {
-                                Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
-                                Name = "Qusten",
-                                Size = new System.Drawing.Size(317, 33),
-                                Dock = DockStyle.Fill,
-                                Width = this.Width - 317,
-                                Location = new System.Drawing.Point(21, 13),
-                                Text = s5p
-                            };
-                            tabControl1.TabPages[a - 1].Controls.Add(labt);
-                            a++;
-                        }
+                            Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                            Name = "Qusten",
+                            Size = new System.Drawing.Size(317, 33),
+                            Dock = DockStyle.Fill,
+                            Width = this.Width - 317,
+                            Location = new System.Drawing.Point(21, 13),
+                            Text = s7p
+                        };
+                        tabControl1.TabPages[a - 1].Controls.Add(labt);
+                        a++;
                     }
-                }//填空题读取Finish
+                }
                 StartTest.Enabled = false;
+                EndTest.Enabled = true;
+
+            }//填空题读取Finish                     
+            else
+            {
+                MessageBox.Show("请输入您的考试信息", "错误！");
+                if (nameSet != null)
+                {
+                    if (nameSet.IsDisposed)
+                    {
+                        nameSet = new NameSet();//如果已经销毁，则重新创建子窗口对象
+                    }
+                    nameSet.Show();
+                    nameSet.Focus();
+                }
+                else
+                {
+                    nameSet = new NameSet();
+                    nameSet.Show();
+                    nameSet.Focus();
+                }
+
             }
 
         }
@@ -203,7 +224,7 @@ namespace TestChange
             String line;
             while ((line = sr.ReadLine()) != null)
             {
-                TestGet += line ;
+                TestGet += line;
             }
             Console.WriteLine(TestGet);
         }
@@ -219,15 +240,15 @@ namespace TestChange
                 Size = new System.Drawing.Size(244, 31),
                 Text = "第一题:1+1 等于多少"
             };
-             RadioButton  chooseA = new System.Windows.Forms.RadioButton()
+            RadioButton chooseA = new System.Windows.Forms.RadioButton()
             {
-                 Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
-                 Location = new System.Drawing.Point(31, 96),
-                 Name = "radioButton1",
-                 Size = new System.Drawing.Size(66, 31),
-                 TabStop = true,
-                 Text = "A.1",
-             };
+                Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                Location = new System.Drawing.Point(31, 96),
+                Name = "radioButton1",
+                Size = new System.Drawing.Size(66, 31),
+                TabStop = true,
+                Text = "A.1",
+            };
             RadioButton chooseB = new System.Windows.Forms.RadioButton()
             {
                 Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
@@ -268,12 +289,12 @@ namespace TestChange
 
         private void Prtsc_Click(object sender, EventArgs e)
         {
-          ;
+            ;
             if (nameSet != null)
             {
                 if (nameSet.IsDisposed)
                 {
-                 Scr scr = new Scr();//如果已经销毁，则重新创建子窗口对象
+                    Scr scr = new Scr();//如果已经销毁，则重新创建子窗口对象
                 }
                 scr.Show();
                 scr.Focus();
@@ -285,5 +306,80 @@ namespace TestChange
                 scr.Focus();
             }
         }
+
+        private void EndTest_Click(object sender, EventArgs e)
+        {
+            string rua = "";
+            for (int j = 0; j < tabControl1.TabCount; j++)
+            {
+               
+                for (int i = 0; i < tabControl1.TabPages[j].Controls.Count; i++)
+                {
+                    if (tabControl1.TabPages[j].Controls[i] is RadioButton)
+                    {
+                        if ((tabControl1.TabPages[j].Controls[i] as RadioButton).Checked)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    rua += j + 1+".A\n";
+                                    break;
+                                case 1:
+                                    rua += j + 1+".B\n";
+                                    break;
+                                case 2:
+                                    rua += j + 1+".C\n";
+                                    break;
+                                case 3:
+                                    rua += j + 1+".D\n";
+                                    break;
+                                case 4:
+                                    rua += j + 1+ ".E\n";
+                                    break;
+                                default:
+                                    rua += j + 1+".未填写";
+                                    break;
+
+                            }
+                        }
+                    }
+               
+                if (tabControl1.TabPages[j].Controls[i] is TextBox)
+                {
+                    if (String.IsNullOrEmpty(tabControl1.TabPages[j].Controls[i].Text.Trim()))
+                    {
+                            rua += j + 1+ ".未填写\n";
+                    }
+                    else
+                    {
+                        rua += tabControl1.TabPages[j].Controls[i].Text;
+                    }
+
+                }
+                }
+
+            }
+            rua += "姓名:" + nameSet.Name + "学号:" + nameSet.NameNumber;
+            if (!File.Exists(nameSet.Name + nameSet.NameNumber))
+            {
+                FileStream fs1 = new FileStream(nameSet.Name + nameSet.NameNumber, FileMode.Create, FileAccess.Write);//创建写入文件 
+                StreamWriter sw = new StreamWriter(fs1);
+                sw.WriteLine(rua);//开始写入值
+                sw.Close();
+                fs1.Close();
+            }
+            else
+            {
+                FileStream fs = new FileStream(nameSet.Name + nameSet.NameNumber, FileMode.Open, FileAccess.Write);
+                StreamWriter sr = new StreamWriter(fs);
+                sr.WriteLine(rua);//开始写入值
+                sr.Close();
+                fs.Close();
+            }
+            StartTest.Enabled = true;
+            EndTest.Enabled = false;
+        }
+
+     
     }
 }

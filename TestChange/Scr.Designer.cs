@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Scr));
             this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -47,8 +48,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(243, 64);
             this.Controls.Add(this.button1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Scr";
-            this.Text = "Scr";
+            this.Text = "截图";
             this.ResumeLayout(false);
 
         }

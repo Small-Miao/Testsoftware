@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.TestMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,6 +96,7 @@
             this.EndTest.Name = "EndTest";
             this.EndTest.Size = new System.Drawing.Size(174, 26);
             this.EndTest.Text = "结束考试";
+            this.EndTest.Click += new System.EventHandler(this.EndTest_Click);
             // 
             // HelpMenu
             // 
@@ -121,7 +123,7 @@
             // Prtsc
             // 
             this.Prtsc.Name = "Prtsc";
-            this.Prtsc.Size = new System.Drawing.Size(216, 26);
+            this.Prtsc.Size = new System.Drawing.Size(144, 26);
             this.Prtsc.Text = "快速截图";
             this.Prtsc.Click += new System.EventHandler(this.Prtsc_Click);
             // 
@@ -156,9 +158,10 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip2;
             this.Name = "Form1";
-            this.Text = "VFoxProTest1.0";
+            this.Text = "考试系统 1.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();

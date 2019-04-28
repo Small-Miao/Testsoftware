@@ -36,7 +36,14 @@ namespace TestChange
             }
             else
             {
-                catchBmp.Save(path, ImageFormat.Jpeg);
+                if (String.IsNullOrEmpty(path))
+                {
+
+                }
+                else
+                {
+                    catchBmp.Save(path, ImageFormat.Jpeg);
+                }
             }
                 
 

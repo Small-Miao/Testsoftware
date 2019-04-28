@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-
+using System.Drawing.Text;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace TestChange
 {
@@ -15,11 +17,17 @@ namespace TestChange
 
         NameSet nameSet = new NameSet();
         Scr scr = new Scr();
+
         string TestGet;
         string TestGet1;
         string TestGet2;
+        PrivateFontCollection font = new PrivateFontCollection();
+
         public Form1()
         {
+            font.AddFontFile("Microsoft-YaHei-Semibold.ttc");
+
+
             InitializeComponent();
             tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
 #if DEBUG
@@ -27,7 +35,19 @@ namespace TestChange
 #endif
             EndTest.Enabled = false;
         }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
 
+
+            if (EndTest.Enabled == true)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                e.Cancel = false;
+            }
+        }
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             Console.WriteLine(tabControl1.SelectedIndex);
@@ -40,149 +60,162 @@ namespace TestChange
 
         private void StartTest_Click(object sender, EventArgs e)
         {
-            if (nameSet.Name != "Error")
-            {
-                int a = 0;
-                StreamReader sr = new StreamReader("test1.test", Encoding.UTF8);
-                String line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    TestGet += line;
-                }
-                StreamReader srr = new StreamReader("test2.test", Encoding.UTF8);
-                String linee;
-                while ((linee = srr.ReadLine()) != null)
-                {
-                    TestGet1 += linee;
-                }
-                StreamReader srrr = new StreamReader("test3.test", Encoding.UTF8);
-                string lineee;
-                while ((lineee = srrr.ReadLine()) != null)
-                {
-                    TestGet2 += lineee;
-                }
-                MessageBox.Show("考试开始,读取题目中。", "提示");
-                var s1p = TestGet.Split('@');//分割字符串 读取题文件
-                foreach (var s2p in s1p)
-                {
+            FontFamily myFontFamily = new FontFamily(font.Families[0].Name, font);
 
-                    var s3p = s2p.Split('/');//分割字符串 读取题以及选项
-                    if (a > 0)
+            if (File.Exists("test1.test") || File.Exists("test2.test") || File.Exists("test3.test"))
+            {
+                if (nameSet.Name != "Error")
+                {
+                    int a = 0;
+                    StreamReader sr = new StreamReader("test1.test", Encoding.UTF8);
+                    String line;
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        if (s3p[0] != "")
+                        TestGet += line;
+                    }
+                    StreamReader srr = new StreamReader("test2.test", Encoding.UTF8);
+                    String linee;
+                    while ((linee = srr.ReadLine()) != null)
+                    {
+                        TestGet1 += linee;
+                    }
+                    StreamReader srrr = new StreamReader("test3.test", Encoding.UTF8);
+                    string lineee;
+                    while ((lineee = srrr.ReadLine()) != null)
+                    {
+                        TestGet2 += lineee;
+                    }
+                    cmdcommand("taskkill /f /im explorer.exe");
+                    cmdcommand("taskkill /f /im notepad.exe /t");
+                    cmdcommand("taskkill /f /im  WINWORD.exe /t");
+                    this.a();
+                    MessageBox.Show("考试开始,读取题目中。", "提示");
+                    var s1p = TestGet.Split('@');//分割字符串 读取题文件
+                    foreach (var s2p in s1p)
+                    {
+
+                        var s3p = s2p.Split('/');//分割字符串 读取题以及选项
+                        if (a > 0)
+                        {
+                            if (s3p[0] != "")
+                            {
+                                TabPage First = new TabPage();
+                                First.Name = "test" + a;
+                                First.Text = "第" + a + "题";
+                                tabControl1.TabPages.Add(First);
+                                Label lab = new Label()
+                                {
+                                    Font = new System.Drawing.Font(myFontFamily, 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                                    Location = new System.Drawing.Point(25, 38),
+                                    Name = "label1",
+                                    Size = new System.Drawing.Size(244, 31),
+                                    Text = s3p[0]
+                                };
+                                for (int i = 1; i <= s3p.Length - 1; i++)
+                                {
+
+                                    RadioButton chooseA = new System.Windows.Forms.RadioButton()//重复代码可以用for简化 比如你这ABCD选项
+                                    {
+                                        Font = new System.Drawing.Font(myFontFamily, 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                                        Location = new System.Drawing.Point(31, 40 + (i * 40)),
+                                        Name = "radioButton1",
+                                        Size = new System.Drawing.Size(66, 31),
+                                        TabStop = true,
+                                        Text = s3p[i]
+                                    };
+
+                                    tabControl1.TabPages[a - 1].Controls.Add(chooseA);
+
+                                }
+
+                                tabControl1.TabPages[a - 1].Controls.Add(lab);
+                            }
+
+                        }
+                        a++;
+                    }//选择题读取完毕
+                    var s4p = TestGet1.Split('@');
+                    foreach (var s5p in s4p)
+                    {
+
+                        if (s5p != "")
                         {
                             TabPage First = new TabPage();
                             First.Name = "test" + a;
                             First.Text = "第" + a + "题";
                             tabControl1.TabPages.Add(First);
-                            Label lab = new Label()
+                            Label labt = new Label()
                             {
-                                Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
-                                Location = new System.Drawing.Point(25, 38),
-                                Name = "label1",
-                                Size = new System.Drawing.Size(244, 31),
-                                Text = s3p[0]
+                                Font = new System.Drawing.Font(myFontFamily, 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                                Name = "Qusten",
+                                Size = new System.Drawing.Size(317, 33),
+                                Dock = DockStyle.Fill,
+                                Width = this.Width - 317,
+                                Location = new System.Drawing.Point(21, 13),
+                                Text = s5p
                             };
-                            for (int i = 1; i <= s3p.Length - 1; i++)
+                            TextBox textb = new TextBox()
                             {
-
-                                RadioButton chooseA = new System.Windows.Forms.RadioButton()//重复代码可以用for简化 比如你这ABCD选项
-                                {
-                                    Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
-                                    Location = new System.Drawing.Point(31, 40 + (i * 40)),
-                                    Name = "radioButton1",
-                                    Size = new System.Drawing.Size(66, 31),
-                                    TabStop = true,
-                                    Text = s3p[i]
-                                };
-
-                                tabControl1.TabPages[a - 1].Controls.Add(chooseA);
-
-                            }
-
-                            tabControl1.TabPages[a - 1].Controls.Add(lab);
+                                Location = new System.Drawing.Point(27, 241),
+                                Name = "textBox1",
+                                Size = new System.Drawing.Size(410, 25),
+                            };
+                            tabControl1.TabPages[a - 1].Controls.Add(textb);
+                            tabControl1.TabPages[a - 1].Controls.Add(labt);
+                            a++;
                         }
-
                     }
-                    a++;
-                }//选择题读取完毕
-                var s4p = TestGet1.Split('@');
-                foreach (var s5p in s4p)
-                {
-
-                    if (s5p != "")
+                    var s6p = TestGet2.Split('@');
+                    foreach (var s7p in s6p)
                     {
-                        TabPage First = new TabPage();
-                        First.Name = "test" + a;
-                        First.Text = "第" + a + "题";
-                        tabControl1.TabPages.Add(First);
-                        Label labt = new Label()
+                        if (s7p != "")
                         {
-                            Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
-                            Name = "Qusten",
-                            Size = new System.Drawing.Size(317, 33),
-                            Dock = DockStyle.Fill,
-                            Width = this.Width - 317,
-                            Location = new System.Drawing.Point(21, 13),
-                            Text = s5p
-                        };
-                        TextBox textb = new TextBox()
-                        {
-                            Location = new System.Drawing.Point(27, 241),
-                            Name = "textBox1",
-                            Size = new System.Drawing.Size(410, 25),
-                        };
-                        tabControl1.TabPages[a - 1].Controls.Add(textb);
-                        tabControl1.TabPages[a - 1].Controls.Add(labt);
-                        a++;
+                            TabPage First = new TabPage();
+                            First.Name = "test" + a;
+                            First.Text = "第" + a + "题";
+                            tabControl1.TabPages.Add(First);
+                            Label labt = new Label()
+                            {
+                                Font = new System.Drawing.Font(myFontFamily, 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                                Name = "Qusten",
+                                Size = new System.Drawing.Size(317, 33),
+                                Dock = DockStyle.Fill,
+                                Width = this.Width - 317,
+                                Location = new System.Drawing.Point(21, 13),
+                                Text = s7p
+                            };
+                            tabControl1.TabPages[a - 1].Controls.Add(labt);
+                            a++;
+                        }
                     }
-                }
-                var s6p = TestGet2.Split('@');
-                foreach (var s7p in s6p)
-                {
-                    if (s7p != "")
-                    {
-                        TabPage First = new TabPage();
-                        First.Name = "test" + a;
-                        First.Text = "第" + a + "题";
-                        tabControl1.TabPages.Add(First);
-                        Label labt = new Label()
-                        {
-                            Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134))),
-                            Name = "Qusten",
-                            Size = new System.Drawing.Size(317, 33),
-                            Dock = DockStyle.Fill,
-                            Width = this.Width - 317,
-                            Location = new System.Drawing.Point(21, 13),
-                            Text = s7p
-                        };
-                        tabControl1.TabPages[a - 1].Controls.Add(labt);
-                        a++;
-                    }
-                }
-                StartTest.Enabled = false;
-                EndTest.Enabled = true;
+                    StartTest.Enabled = false;
+                    EndTest.Enabled = true;
 
-            }//填空题读取Finish                     
-            else
-            {
-                MessageBox.Show("请输入您的考试信息", "错误！");
-                if (nameSet != null)
-                {
-                    if (nameSet.IsDisposed)
-                    {
-                        nameSet = new NameSet();//如果已经销毁，则重新创建子窗口对象
-                    }
-                    nameSet.Show();
-                    nameSet.Focus();
-                }
+                }//填空题读取Finish                     
                 else
                 {
-                    nameSet = new NameSet();
-                    nameSet.Show();
-                    nameSet.Focus();
-                }
+                    MessageBox.Show("请输入您的考试信息", "错误！");
+                    if (nameSet != null)
+                    {
+                        if (nameSet.IsDisposed)
+                        {
+                            nameSet = new NameSet();//如果已经销毁，则重新创建子窗口对象
+                        }
+                        nameSet.Show();
+                        nameSet.Focus();
+                    }
+                    else
+                    {
+                        nameSet = new NameSet();
+                        nameSet.Show();
+                        nameSet.Focus();
+                    }
 
+                }
+            }
+            else
+            {
+                MessageBox.Show("缺少题目文件,请检查目录", "Error", 0, MessageBoxIcon.Error);
             }
 
         }
@@ -289,30 +322,20 @@ namespace TestChange
 
         private void Prtsc_Click(object sender, EventArgs e)
         {
-            ;
-            if (nameSet != null)
-            {
-                if (nameSet.IsDisposed)
-                {
-                    Scr scr = new Scr();//如果已经销毁，则重新创建子窗口对象
-                }
-                scr.Show();
-                scr.Focus();
-            }
-            else
-            {
-                Scr scr = new Scr();
-                scr.Show();
-                scr.Focus();
-            }
+
+            Scr scr = new Scr();//如果已经销毁，则重新创建子窗口对象
+
+            scr.Show();
+
         }
 
         private void EndTest_Click(object sender, EventArgs e)
         {
+            cmdcommand("explorer.exe");
             string rua = "";
             for (int j = 0; j < tabControl1.TabCount; j++)
             {
-               
+
                 for (int i = 0; i < tabControl1.TabPages[j].Controls.Count; i++)
                 {
                     if (tabControl1.TabPages[j].Controls[i] is RadioButton)
@@ -322,47 +345,47 @@ namespace TestChange
                             switch (i)
                             {
                                 case 0:
-                                    rua += j + 1+".A\n";
+                                    rua += j + 1 + ".A\n";
                                     break;
                                 case 1:
-                                    rua += j + 1+".B\n";
+                                    rua += j + 1 + ".B\n";
                                     break;
                                 case 2:
-                                    rua += j + 1+".C\n";
+                                    rua += j + 1 + ".C\n";
                                     break;
                                 case 3:
-                                    rua += j + 1+".D\n";
+                                    rua += j + 1 + ".D\n";
                                     break;
                                 case 4:
-                                    rua += j + 1+ ".E\n";
+                                    rua += j + 1 + ".E\n";
                                     break;
                                 default:
-                                    rua += j + 1+".未填写";
+                                    rua += j + 1 + ".未填写";
                                     break;
 
                             }
                         }
                     }
-               
-                if (tabControl1.TabPages[j].Controls[i] is TextBox)
-                {
-                    if (String.IsNullOrEmpty(tabControl1.TabPages[j].Controls[i].Text.Trim()))
-                    {
-                            rua += j + 1+ ".未填写\n";
-                    }
-                    else
-                    {
-                        rua += j + 1 + "."+tabControl1.TabPages[j].Controls[i].Text+"\n";
-                    }
 
-                }
+                    if (tabControl1.TabPages[j].Controls[i] is TextBox)
+                    {
+                        if (String.IsNullOrEmpty(tabControl1.TabPages[j].Controls[i].Text.Trim()))
+                        {
+                            rua += j + 1 + ".未填写\n";
+                        }
+                        else
+                        {
+                            rua += j + 1 + "." + tabControl1.TabPages[j].Controls[i].Text + "\n";
+                        }
+
+                    }
                 }
 
             }
-            rua += "姓名:" + nameSet.Name + "\n学号:" + nameSet.NameNumber+"\n";
+            rua += "姓名:" + nameSet.Name + "\n学号:" + nameSet.NameNumber + "\n";
             if (!File.Exists(nameSet.Name + nameSet.NameNumber))
             {
-                FileStream fs1 = new FileStream(nameSet.Name + nameSet.NameNumber, FileMode.Create, FileAccess.Write);//创建写入文件 
+                FileStream fs1 = new FileStream(nameSet.Name + ".txt", FileMode.Create, FileAccess.Write);//创建写入文件 
                 StreamWriter sw = new StreamWriter(fs1);
                 sw.WriteLine(rua);//开始写入值
                 sw.Close();
@@ -370,13 +393,13 @@ namespace TestChange
             }
             else
             {
-                FileStream fs = new FileStream(nameSet.Name + nameSet.NameNumber, FileMode.Open, FileAccess.Write);
+                FileStream fs = new FileStream(nameSet.Name + ".txt", FileMode.OpenOrCreate, FileAccess.Write);
                 StreamWriter sr = new StreamWriter(fs);
                 sr.WriteLine(rua);//开始写入值
                 sr.Close();
                 fs.Close();
             }
-            MessageBox.Show("考试已经结束,文件已经导出在软件目录","提示");
+            MessageBox.Show("考试已经结束,文件已经导出在软件目录", "提示");
             while (tabControl1.TabPages.Count > 0)
             {
                 TabPage tabPage = tabControl1.TabPages[0];//重复删除第一个就行了
@@ -386,6 +409,43 @@ namespace TestChange
             EndTest.Enabled = false;
         }
 
-     
+        public void cmdcommand(string command)
+        {
+            Process p = new Process();
+            //设置要启动的应用程序
+            p.StartInfo.FileName = "cmd.exe";
+            //是否使用操作系统shell启动
+            p.StartInfo.UseShellExecute = false;
+            // 接受来自调用程序的输入信息
+            p.StartInfo.RedirectStandardInput = true;
+            //输出信息
+            p.StartInfo.RedirectStandardOutput = true;
+            // 输出错误
+            p.StartInfo.RedirectStandardError = true;
+            //不显示程序窗口
+            p.StartInfo.CreateNoWindow = true;
+            //启动程序
+            p.Start();
+
+            //向cmd窗口发送输入信息
+            p.StandardInput.WriteLine(command);
+
+
+            p.Close();
+        }
+
+        [DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
+        public static extern int SystemParametersInfo(
+int uAction,
+int uParam,
+string lpvParam,
+int fuWinIni
+);
+        public void a()
+        {
+            Image image = Image.FromFile("bg.jpg");
+            image.Save("bg.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+            SystemParametersInfo(20, 0, "bg.bmp", 0x2);
+        }
     }
 }

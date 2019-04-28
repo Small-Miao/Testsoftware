@@ -162,6 +162,7 @@
             this.MainMenuStrip = this.menuStrip2;
             this.Name = "Form1";
             this.Text = "考试系统 1.0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
